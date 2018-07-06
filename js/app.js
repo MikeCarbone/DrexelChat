@@ -18,20 +18,12 @@ import ReactDOM from 'react-dom';
 //}
 
 //simulated response from backend when requesting user details
-const userJSON = {
+const user = {
 	"userId": 2,
 	"firstName": "Mike",
 	"lastName": "Carbone",
 	"fullName": "Mike Carbone",
 	"picture": "http://via.placeholder.com/30x30"
-}
-
-//constructing user data for the session
-var user = setUser(userJSON);
-
-function setUser(data){
-	let sessionUser = data;
-	return sessionUser;
 }
 
 //Simulated response from backend when requesting messages
@@ -85,6 +77,7 @@ class App extends React.Component{
 
 		if (messageText != ""){
 			
+			//object to use when creating new messages to send to server/chat log array
 			function AddedMessage(messageId, name, userId, message, picture, date, group){
 				this.messageId = messageId;
 				this.name = name;
@@ -95,15 +88,19 @@ class App extends React.Component{
 				this.group = group;
 			}
 			
+			//Creating new message obj to send to chat log array
 			let messageToPush = new AddedMessage(undefined, user.fullName, user.userId, messageText, user.picture, undefined, undefined);
 			console.log('POSTING: ', messageToPush);
-
+			
+			//adding the new chat obj to the history log
 			messagesToDisplay.push(messageToPush);
 
 			//AJAX TO SERVER HERE
-
+			
+			//Must reset state here so the chat history component knows to update
 			this.setState({messagesToDisplay: messagesToDisplay});
-
+			
+			//Clears the message input box and the var holding it
 			messageInput.value = "";
 			messageText = "";
 		} else {

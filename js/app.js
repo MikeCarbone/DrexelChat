@@ -1,17 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const messages = ['hello', 'hi', 'please'];
-let displayedMessages = messages.slice();
-
-//fetch array of previous messages
-//display that array
-//type out message, click send
-//send to db, add to chat log
-//refetch chat history
-//redisplay messages
-//~~~~~SLOW~~~~~
-
 //get array of previous messages
 //duplicate to displayed messages array
 //display that array
@@ -23,62 +12,112 @@ let displayedMessages = messages.slice();
 //--if so (your own message), do not add, do not re-display 
 //~~~~FASTER~~~~
 
+
+//function getUser(){
+//	get details from DB, store data locally so we know who is sending messages
+//}
+
+//simulated response from backend when requesting user details
+const userJSON = {
+	"userId": 2,
+	"firstName": "Mike",
+	"lastName": "Carbone",
+	"fullName": "Mike Carbone",
+	"picture": "http://via.placeholder.com/30x30"
+}
+
+//constructing user data for the session
+var user = setUser(userJSON);
+
+function setUser(data){
+	let sessionUser = data;
+	return sessionUser;
+}
+
+//Simulated response from backend when requesting messages
+let responseData = {
+	"channel": "drexel",
+	"messages": [
+		{
+			"messageId": 1,
+			"name": "Mike Carbone",
+			"userid": 12,
+			"message": "Hello",
+			"picture": "http://via.placeholder.com/30x30",
+			"date": "2017-07-05T21:11:54-0500",
+			"group": 3
+		},		
+		{
+			"messageId": 3,
+			"name": "Steven George",
+			"userid": 14,
+			"message": "Shutup",
+			"picture": "http://via.placeholder.com/30x30",
+			"date": "2017-07-05T21:11:54-0500",
+			"group": 3
+		},
+		{
+			"messageId": 4,
+			"name": "Crap Butt",
+			"userid": 2,
+			"message": "Big head",
+			"picture": "http://via.placeholder.com/30x30",
+			"date": "2017-07-05T21:11:54-0500",
+			"group": 3
+		}] 
+};
+
+//Array of displayed messages. If it is already in the DB, it should be displayed
+let messagesToDisplay = responseData.messages;
+
 class App extends React.Component{
 	constructor(){
 		super()
 		this.sendMessage = this.sendMessage.bind(this);
 		this.state = {
-			isMessageSent: false,
-			passedMessage: "",
-			displayedMessages: displayedMessages
+			messagesToDisplay: messagesToDisplay
 		};
 	}
 	
 	sendMessage(){
-		console.log('within send');
-		let isMessageSent = this.state.isMessageSent;
+		let messageInput = document.getElementById('message-input');
+		let messageText = messageInput.value;
 
-		if (this.state.isMessageSent){
-			this.setState({isMessageSent: false});
-		} else {
-			let messageInput = document.getElementById('message-input')
-			let messageText = messageInput.value;
+		if (messageText != ""){
 			
-			this.setState({
-				isMessageSent: true,
-				passedMessage: messageText
-			});
+			function AddedMessage(messageId, name, userId, message, picture, date, group){
+				this.messageId = messageId;
+				this.name = name;
+				this.userId = userId;
+				this.message = message;
+				this.picture = picture;
+				this.date = date;
+				this.group = group;
+			}
+			
+			let messageToPush = new AddedMessage(undefined, user.fullName, user.userId, messageText, user.picture, undefined, undefined);
+			console.log('POSTING: ', messageToPush);
+
+			messagesToDisplay.push(messageToPush);
+
+			//AJAX TO SERVER HERE
+
+			this.setState({messagesToDisplay: messagesToDisplay});
 
 			messageInput.value = "";
+			messageText = "";
+		} else {
+			null;
 		}
 	}
 
 	render(){
-		let isMessageSent = this.state.isMessageSent;
-		let Message1;
-		
-		//THINGS TO DO WHEN MESSAGE IS SENT
-		if (isMessageSent){
-			Message1 = <Message value={this.state.passedMessage} />;
-			displayedMessages.push(this.state.passedMessage);
-			//PUSH
-			this.setState({
-				isMessageSent: false,
-				passedMessage: ""
-			});
-		} else {
-			Message1 = null;
-		}
-		
 		return(
 			<div>
 				<section>
-					<ChatHistory historyArray={this.state.displayedMessages} />
+					<ChatHistory />
 				</section>
 				<div>
-					
-					{Message1}
-				
 					<div>
 						<input id="message-input" type="text" name="message" />
 						<button onClick={this.sendMessage}>Send</button>
@@ -90,12 +129,12 @@ class App extends React.Component{
 }
 
 function Message(props){
-	if (props.value){
+	if (props.text){
 		return(
 			<div>
-				<img src="http://via.placeholder.com/30x30" />
-				<h2>Mike</h2>
-				<h3>{props.value}</h3>
+				<img src={props.picture} />
+				<h2>{props.name}</h2>
+				<h3>{props.text}</h3>
 			</div>
 		);
 	} else {
@@ -104,10 +143,14 @@ function Message(props){
 }
 
 function ChatHistory(props){
-	//console.log('THIS HISTORY: ', props.historyArray);
-	var history = props.historyArray.map((value, index) => {
+
+	var history = messagesToDisplay.map((value, index) => {
 		return(
-			<Message value={value}/>
+			<Message 
+				text={messagesToDisplay[index].message} 
+				name={messagesToDisplay[index].name} 
+				picture={messagesToDisplay[index].picture}
+			/>
 		);
 	})
 	

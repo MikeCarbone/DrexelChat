@@ -17,7 +17,7 @@ import ReactDOM from 'react-dom';
 //	get details from DB, store data locally so we know who is sending messages
 //}
 
-//simulated response from backend when requesting user details
+//Simulated response from backend when requesting user details
 const user = {
 	"userId": 2,
 	"firstName": "Mike",
@@ -77,7 +77,7 @@ class App extends React.Component{
 
 		if (messageText != ""){
 			
-			//object to use when creating new messages to send to server/chat log array
+			//Object to use when creating new messages to send to server/chat log array
 			function AddedMessage(messageId, name, userId, message, picture, date, group){
 				this.messageId = messageId;
 				this.name = name;
@@ -92,7 +92,7 @@ class App extends React.Component{
 			let messageToPush = new AddedMessage(undefined, user.fullName, user.userId, messageText, user.picture, undefined, undefined);
 			console.log('POSTING: ', messageToPush);
 			
-			//adding the new chat obj to the history log
+			//Adding the new chat obj to the history log
 			messagesToDisplay.push(messageToPush);
 
 			//AJAX TO SERVER HERE

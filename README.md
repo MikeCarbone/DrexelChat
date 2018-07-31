@@ -2,22 +2,26 @@
 
 ## User
 
-| name          | type             |
-| ------------- | ---------------- |
-| User ID       | generated string |
-| Username      | string           |
-| SHA2 Password | string           |
-| Groups        | Array            |
+| name           | type             |
+| -------------- | ---------------- |
+| \_id           | generated string |
+| email          | string           |
+| hashedPassword | string           |
+| groups         | Array of group \_ids            |
+| createdAt      | Date             |
+| updatedAt      | Date             |
 
 ## Messages
 
 | name       | type             |
 | ---------- | ---------------- |
-| Message ID | generated string |
-| Sender ID  | generated string |
-| Content    | string           |
-| Group ID   | generated string |
-| Date       | datetime         |
+| \_id | generated string |
+| sender  | User _id |
+| content    | string           |
+| Group ID   | group _id |
+| date       | Date         |
+| createdAt      | Date             |
+| updatedAt      | Date             |
 
 ## Group
 
@@ -25,7 +29,9 @@
 | -------- | ---------------- |
 | Group ID | generated string |
 | Name     | string           |
-| Members  | Array            |
+| Members  | Array of User \_ids            |
+| createdAt      | Date             |
+| updatedAt      | Date             |
 
 # Todo list
 

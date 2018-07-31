@@ -2,30 +2,30 @@
 
 ## User
 
-| name          | type    |
-| ------------- | ------- |
-| User ID       | int     |
-| Username      | varchar |
-| SHA2 Password | varchar |
-| Groups        | varchar |
+| name          | type             |
+| ------------- | ---------------- |
+| User ID       | generated string |
+| Username      | string           |
+| SHA2 Password | string           |
+| Groups        | Array            |
 
 ## Messages
 
-| name       | type     |
-| ---------- | -------- |
-| Message ID | int      |
-| Sender ID  | int      |
-| Content    | text     |
-| Group ID   | int      |
-| Date       | datetime |
+| name       | type             |
+| ---------- | ---------------- |
+| Message ID | generated string |
+| Sender ID  | generated string |
+| Content    | string           |
+| Group ID   | generated string |
+| Date       | datetime         |
 
 ## Group
 
-| name     | type    |
-| -------- | ------- |
-| Group ID | int     |
-| Name     | varchar |
-| Members  | varchar |
+| name     | type             |
+| -------- | ---------------- |
+| Group ID | generated string |
+| Name     | string           |
+| Members  | Array            |
 
 # Todo list
 

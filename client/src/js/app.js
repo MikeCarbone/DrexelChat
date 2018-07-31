@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import GroupList from './components/group-list.jsx';
 import ChatHistory from './components/chat-history.jsx';
+import * as api from "./api";
 
 //function getUser(){
 //	get details from DB, store data locally in browser so we know who is sending messages
@@ -14,12 +15,14 @@ const user = {
 	"lastName": "Carbone",
 	"fullName": "Mike Carbone",
 	"picture": "http://via.placeholder.com/30x30",
-	"groups": [2,5,6,77],
+	"groups": [2, 5, 6, 77],
 	"mainGroup": 2
 };
 
-class App extends React.Component{
-	constructor(){
+
+
+class App extends React.Component {
+	constructor() {
 		super();
 		this.sendMessage = this.sendMessage.bind(this);
 		this.refreshHistoryState = this.refreshHistoryState.bind(this);
@@ -29,16 +32,16 @@ class App extends React.Component{
 			isComponentMounted: false
 		};
 	}
-	
-	sendMessage(){
+
+	sendMessage() {
 		const messageInput = document.getElementById('message-input');
 		let messageText = messageInput.value;
 		let messagesToDisplay = this.state.messagesToDisplay;
+		
+		if (messageText != "") {
 
-		if (messageText != ""){
-			
 			//Object to use when creating new messages to send to server/chat log array
-			function AddedMessage(messageId, name, userId, message, picture, date, group){
+			function AddedMessage(messageId, name, userId, message, picture, date, group) {
 				this.messageId = messageId;
 				this.name = name;
 				this.userId = userId;
@@ -48,7 +51,7 @@ class App extends React.Component{
 				this.date = date;
 				this.group = group;
 			}
-			
+
 			//Creating new message obj to send to chat log array
 			let messageToPush = new AddedMessage(undefined, user.fullName, user.userId, messageText, user.picture, undefined, undefined);
 			console.log('POSTING: ', messageToPush);
@@ -57,10 +60,10 @@ class App extends React.Component{
 			messagesToDisplay.push(messageToPush);
 
 			//AJAX TO SERVER HERE
-			
+
 			//Must reset state here so the chat history component knows to update
 			this.refreshHistoryState(messagesToDisplay);
-			
+
 			//Clears the message input box and the var holding it
 			messageInput.value = "";
 			messageText = "";
@@ -69,24 +72,33 @@ class App extends React.Component{
 		}
 	}
 
-	refreshHistoryState(newMessages){
-		this.setState({messagesToDisplay: newMessages},
-			function(){
+	refreshHistoryState(newMessages) {
+		this.setState({
+				messagesToDisplay: newMessages
+			},
+			function () {
 				console.group('Chat log state change!');
-					console.log('PASSED DATA: ', newMessages);
-					console.log('STATE SHOWING: ', this.state.messagesToDisplay);
+				console.log('PASSED DATA: ', newMessages);
+				console.log('STATE SHOWING: ', this.state.messagesToDisplay);
 				console.groupEnd();
 			});
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 		let messagesToDisplay;
 
 		//Simulated response from backend when requesting messages
+
+		//how to do use api get functions:
+		api.getMessages().then( data => {
+			//do whatever with response data
+			console.log(data)
+		})
+
+
 		let responseData = {
 			"channel": "drexel",
-			"messages": [
-				{
+			"messages": [{
 					"messageId": 1,
 					"name": "Mike Carbone",
 					"userid": 12,
@@ -94,7 +106,7 @@ class App extends React.Component{
 					"picture": "http://via.placeholder.com/30x30",
 					"date": "2017-07-05T21:11:54-0500",
 					"group": 3
-				},		
+				},
 				{
 					"messageId": 3,
 					"name": "Steven George",
@@ -114,16 +126,18 @@ class App extends React.Component{
 					"group": 3
 				}
 				//Add all new recieved messages here
-			] 
+			]
 		};
 
 		messagesToDisplay = responseData.messages;
-		
+
 		this.refreshHistoryState(messagesToDisplay);
-		this.setState({isComponentMounted: true});
+		this.setState({
+			isComponentMounted: true
+		});
 	}
 
-	render(){
+	render() {
 		return(
 			<div>
 				<aside>
@@ -145,7 +159,7 @@ class App extends React.Component{
 	}
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
+ReactDOM.render( <
+	App / > ,
+	document.getElementById('root')
 );

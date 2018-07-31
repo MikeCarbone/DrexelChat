@@ -8,7 +8,7 @@ module.exports = {
 		path: __dirname,
 		filename: 'build/js/bundle.js'
 	},
-	watch: true,
+	watch: false,
 	module: {
 		rules: [
 			{

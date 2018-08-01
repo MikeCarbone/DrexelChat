@@ -18,7 +18,7 @@
 | \_id | generated string |
 | sender  | User _id |
 | content    | string           |
-| Group ID   | group _id |
+| group   | group _id |
 | date       | Date         |
 | createdAt      | Date             |
 | updatedAt      | Date             |
@@ -27,9 +27,9 @@
 
 | name     | type             |
 | -------- | ---------------- |
-| Group ID | generated string |
-| Name     | string           |
-| Members  | Array of User \_ids            |
+| _id | generated string |
+| name     | string           |
+| members  | Array of User \_ids            |
 | createdAt      | Date             |
 | updatedAt      | Date             |
 

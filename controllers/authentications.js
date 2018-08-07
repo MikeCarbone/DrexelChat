@@ -37,6 +37,12 @@ function authenticationsRegister(req, res) {
 
 function authenticationsLogin(req, res) {
 	var { email, password } = req.body;
+	if (!email || !password) {
+		return res.status(500).json({
+			success: false,
+			error: "You must provide an email and password. " + email + " " + password
+		});
+	}
 
 	email = email.toLowerCase();
 	email = email.trim();

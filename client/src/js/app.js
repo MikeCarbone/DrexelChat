@@ -34,6 +34,8 @@ class App extends React.Component {
 	}
 
 	sendMessage() {
+		
+
 		const messageInput = document.getElementById('message-input');
 		let messageText = messageInput.value;
 		let messagesToDisplay = this.state.messagesToDisplay;
@@ -88,12 +90,15 @@ class App extends React.Component {
 		let messagesToDisplay;
 
 		//Simulated response from backend when requesting messages
+		let content = "test123";
+		let date = new Date();
+		let group = 1;
 
-		//how to do use api get functions:
-		api.getMessages().then( data => {
-			//do whatever with response data
-			console.log(data)
+		api.getMessages().then(response => {
+			console.log(response.data.data)
 		})
+		//how to do use api get functions:
+		
 
 
 		let responseData = {

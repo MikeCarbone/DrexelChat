@@ -28,11 +28,9 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(bodyParser.json());
+
 app.use(logger("dev"));
-app.use(function (req, res, next) {
-	res.io = io;
-	next();
-});
+
 app.use(express.static(path.join(__dirname, "client")));
 
 
@@ -55,7 +53,10 @@ app.use(express.static(path.join(__dirname, "client")));
 
 router.get("/", function (req, res, next) {
 	res.io.emit("test", "helloWorld!");
+	next();
 });
+
+// app.use(function(req,res,next){console.log(req.method,req.url); next();});
 
 // Get ALL routes from routes folder
 require("./routes")(router);
@@ -63,13 +64,20 @@ require("./routes")(router);
 // Use our router configuration when we call /api
 app.use("/api", router);
 
+
 router.get("/", (req, res) => {
-	return res.status(200).json({ success: true, data: "test123" });
+	return res.status(200).json({
+		success: true,
+		data: "test123"
+	});
 });
 
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "client"));
 });
+
+
+
 
 var server = app.listen(API_PORT, () => console.log(`Express Listening on port ${API_PORT}`));
 //initalize server for socket.io

@@ -11,6 +11,12 @@ module.exports = router => {
 
 	router.post("/messages", (req, res) => {
 		var user = jwt.decode(req.get("Authorization").substring(7));
+		if ( !user ) {
+			return res.status(500).json({
+				success: false,
+				error: "User has no authentication token"
+			})
+		}
 		var sender = user._id;
 
 		const message = new Message();
@@ -34,13 +40,16 @@ module.exports = router => {
 		});
 	});
 
-	router.delete("/messages/:messageId", (req, res) => {
-		const { messageId } = req.params;
+	router.delete(`/messages`, (req, res) => {
+		const messageId = req.query.messageId;
 		if (!messageId) {
 			return res.status(500).json({ success: false, error: "No message id provided" });
 		}
 		Message.remove({ _id: messageId }, (error, comment) => {
-			if (error) return res.json({ success: false, error });
+			if (error) return res.status(500).json({ success: false, error });
+			if (comment.n == 0) {
+				return res.status(500).json({ success: false, error: "No message with given Id" });
+			}
 			return res.status(200).json({ success: true });
 		});
 	});
